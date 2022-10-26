@@ -1,0 +1,206 @@
+import mysql.connector
+
+conexao = mysql.connector.connect(
+ host= 'localhost',
+ user = 'root',
+ password = '@Camden12',
+ database = 'sismatricula',
+)
+
+def matricular():
+    cursor = conexao.cursor()
+    continuar = True
+    while(continuar == True):
+        nome_aluno = input("Digite o nome do aluno:  ")
+        serie = input("Digite a série do aluno: Ex: 5° ano ")
+        turma = input("Digite a turma do aluno: Ex: A, B, C, D ou E ")
+        turno = input("Digite o turno do aluno: Ex: Manhã ou Tarde ")
+
+        comando = f'INSERT INTO matricula (nome_aluno, serie, turma, turno) VALUES ("{nome_aluno}", "{serie}","{turma}","{turno}")'
+        cursor.execute(comando)
+        conexao.commit()
+
+    
+
+        print("Deseja matricular outro aluno?  S - Sim ou N - Não")
+        opc = input()
+        if (opc == 'n' or opc == 'N'):
+            continuar = False
+        else:
+            print("Vamos lá cadastrar mais um aluno !!")
+        
+
+    cursor.close()
+    conexao.close()
+    cabecalho()
+    menu()
+
+def consultar():
+    cursor = conexao.cursor()
+    continuar = True
+    while(continuar == True):
+        num_matricula = int(input("Digite a matricula do aluno:  "))
+
+        comando = f'SELECT * FROM matricula WHERE num_matricula = "{num_matricula}"'
+        cursor.execute(comando)
+        resultado = cursor.fetchall()
+        print(resultado)
+    
+
+        print("Deseja consultar o cadastro de outro aluno?  S - Sim ou N - Não")
+        opc = input()
+        if (opc == 'n' or opc == 'N'):
+            continuar = False
+        else:
+            print("Abrindo nova consulta")
+        
+
+    cursor.close()
+    conexao.close()
+    cabecalho()
+    menu()
+
+def menuEditar():
+    continuarEditar = True
+    while continuarEditar == True:
+        opc = 0
+        while opc != 5:
+
+            print("******************************************")
+            print("* *******    ALTERAR/ EDITAR   ********* *")
+            print("* ******* 1 - NOME             ********* *")
+            print("* ******* 2 - SERIE            ********* *")
+            print("* ******* 3 - TURMA            ********* *")
+            print("* ******* 4 - TURNO            ********* *")
+            print("* ******* 5 - SAIR             ********* *")
+            print("******************************************")
+
+            opc =int(input("Digite a operação desejada: 1- Matricular, 2- Consulta de cadastro, 3- Editar,  4- Deletar\n"))
+            
+            if opc == 1:
+                cabecalho()
+                cursor = conexao.cursor()
+                num_matriula = int(input("Digite o número de matricula do aluno que deseja realizar alterações: Ex:00000001 "))
+                nome_aluno = input("Digite o nome que deseja substituir: ")
+                comando = f'UPDATE matricula SET nome_aluno = "{nome_aluno}" WHERE num_matricula = "{num_matriula}"' 
+                cursor.execute(comando)
+                conexao.commit()
+
+                cursor.close()
+                conexao.close()
+
+            
+                
+            elif opc == 2:
+                cabecalho()
+                cursor = conexao.cursor()
+                num_matriula = int(input("Digite o número de matricula do aluno que deseja realizar alterações: Ex:00000001 "))
+                serie = input("Digite para qual serie deseja substituir: 5° ano\n")
+                comando = f'UPDATE matricula SET serie = "{serie}" WHERE num_matricula = "{num_matriula}"' 
+                cursor.execute(comando)
+                conexao.commit()
+
+                cursor.close()
+                conexao.close()
+            elif opc == 3:
+                cabecalho()
+                cursor = conexao.cursor()
+                num_matriula = int(input("Digite o número de matricula do aluno que deseja realizar alterações: Ex:00000001 "))
+                turma = input("Digite para qual turma deseja substituir: A,B,C,D ou E\n")
+                comando = f'UPDATE matricula SET turma = "{turma}" WHERE num_matricula = "{num_matriula}"' 
+                cursor.execute(comando)
+                conexao.commit()
+
+                cursor.close()
+                conexao.close()
+            elif opc == 4:
+                cabecalho()
+                cursor = conexao.cursor()
+                num_matriula = int(input("Digite o número de matricula do aluno que deseja realizar alterações: Ex:00000001 "))
+                turno = input("Digite para qual turno deseja substituir: Ex: Manhã ou Tarde\n")
+                comando = f'UPDATE matricula  SET turno = "{turno}" WHERE num_matricula = "{num_matriula}"' 
+                cursor.execute(comando)
+                conexao.commit()
+
+                cursor.close()
+                conexao.close()
+            elif opc == 5:
+                print("\nVoltando para o menu...")
+                cabecalho()
+                menu()
+            else:
+                print("OPÇÃO INVÁLIDA  - tente novamente ou digite 5 para sair!")
+                opc = 0 
+            print("Deseja realizar alterações de outro aluno?  S - Sim ou N - Não")
+            opc = input()
+            if (opc == 'n' or opc == 'N'):
+                continuarEditar = False
+                cabecalho()
+                menu()
+            else:
+                print("Abrindo o menu de edição!!")
+
+
+def deletar():
+    cursor = conexao.cursor()
+    continuar = True
+    while(continuar == True):
+        num_matricula = int(input("Digite o número da matricula: \n"))
+        comando = f'DELETE FROM matricula WHERE num_matricula = "{num_matricula}"'
+        cursor.execute(comando)
+        conexao.commit()
+
+        print("Aluno excluído com sucesso. \n\n")
+        print("Deseja excluir outro aluno?  S - Sim ou N - Não")
+    
+        opc = input()
+        if (opc == 'n' or opc == 'N'):
+            continuar = False
+        else:
+            print("Vamos lá cadastrar mais um aluno !!")
+        
+
+    cursor.close()
+    conexao.close()
+    cabecalho()
+    menu()
+
+
+def cabecalho():
+    print("------------------------------------------")
+    print("- ------- SISTEMA DE MATRICULA --------- -")
+    print("------------------------------------------")
+
+def menu():
+    opc = 0
+    while opc != 5:
+
+        print("******************************************")
+        print("* *******    SEJA BEM VINDO    ********* *")
+        print("* ******* 1 - MATRICULAR       ********* *")
+        print("* ******* 2 - CONSULTAR ALUNO  ********* *")
+        print("* ******* 3 - EDITAR           ********* *")
+        print("* ******* 4 - DELETAR          ********* *")
+        print("* ******* 5 - SAIR             ********* *")
+        print("******************************************")
+    
+        opc =int(input("Digite a operação desejada: 1- Matricular, 2- Consulta de cadastro, 3- Editar,  4- Deletar\n"))
+        
+        if opc == 1:
+            matricular()
+        elif opc == 2:
+            consultar()
+        elif opc == 3:
+            menuEditar()
+        elif opc == 4:
+            deletar()
+        elif opc == 5:
+            print("\nEncerrando...")
+            print("\nATÉ A PRÓXIMA")
+            exit()
+        else:
+            print("OPÇÃO INVÁLIDA  - tente novamente ou digite 5 para sair!")
+            opc = 0 
+
+cabecalho()
+menu()
